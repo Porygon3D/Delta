@@ -1,0 +1,31 @@
+trigger
+-main
+
+pool:
+vmImage: ubuntu-latest
+
+variables:
+    configuration: 'Realease'
+    
+    
+    
+steps:
+-task:UseDotNet@2
+
+inputs:
+packageType:sdk
+version:8.0
+
+-script: |
+dotnet tool restore
+mgcb /q
+displayName:'Restore tools and Build Content'
+
+-script: |
+dotnet restore 
+dotnet build --configuration $(configuration)
+displayName: 'Restore and build project'
+
+-script: | 
+dotnet test --configuration $(configuration) --no-build
+displayName: 'Run unit tests'
