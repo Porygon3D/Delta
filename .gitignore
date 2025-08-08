@@ -1,0 +1,11 @@
+#MonoGame GitIgnore
+
+bin/
+obj/
+
+Content/bin/
+Content/obj/
+
+*.user
+*.vs
+*.vscode
