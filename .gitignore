@@ -9,3 +9,10 @@ Content/obj/
 *.user
 *.vs
 *.vscode
+bin/
+obj/
+*.user
+*.suo
+*.log
+*.DS_Store
+*.vs/
