@@ -2,7 +2,9 @@ trigger:
   - main
 
 pool:
-  vmImage: windows-latest
+  name: 'Default'
+  demands: 
+    - Agent-Name - equals ISOMETRIC
 
 variables:
   configuration: 'Release'
