@@ -4,7 +4,7 @@ trigger:
 pool:
   name: 'Default'
   demands: 
-    - Agent-Name - equals ISOMETRIC
+    - Agent.Name - equals ISOMETRIC
 
 variables:
   configuration: 'Release'
