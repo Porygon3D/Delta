@@ -13,18 +13,24 @@ namespace Delta;
 //Written By Holden Thompson - SandboxSoftware 
 public class Game1 : Game
 {
+
+    
+
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private TimeSpan accumulator = TimeSpan.Zero;
     private KeyboardState _previousKeyboard;
     private MouseState _previousMouse;
     private GamePadState _previousGamePad;
-    private Texture2D _playerTexture;
+    //private Texture2D _playerTexture;
     private readonly Dictionary<string, Texture2D> _textures = new(); //Dictionary to hold loaded textures
     private Texture2DAtlas _atlas; //Example of using MonoGame.Extended for texture atlases
     private const int VirtualWidth = 800; 
     private const int VirtualHeight = 600;
-    private RenderTarget2D _virtualTarget; 
+    private RenderTarget2D _virtualTarget;
+    private RenderTarget2D _sceneTarget;
+    private Effect _postProcessEffect;
+
 
 
     public Game1()
@@ -73,7 +79,14 @@ public class Game1 : Game
 
 
         //_playerTexture = Content.Load<Texture2D>("Texture/player"); //Load a player texure to memory
-
+        _sceneTarget = new RenderTarget2D(
+            GraphicsDevice,
+            VirtualWidth,
+            VirtualHeight,
+            false,
+            GraphicsDevice.PresentationParameters.BackBufferFormat,
+            DepthFormat.None
+            );
 
         _virtualTarget = new RenderTarget2D (GraphicsDevice,
             VirtualWidth,
@@ -82,6 +95,8 @@ public class Game1 : Game
             GraphicsDevice.PresentationParameters.BackBufferFormat,
             DepthFormat.None
             );
+
+        //_postProcessEffect = Content.Load<Effect>("Effects/Grayscale"); //Example
 
     }
 
@@ -202,6 +217,8 @@ public class Game1 : Game
         TODO: Add your drawing code here
         Issue all draw calls here
         As project grows need to move the drawing code into a separate class to manage layers and spritebatches
+
+        TODO overide OnClientSizeChanged event to update the viewport dimensions
         */
 
         /* 
@@ -212,6 +229,9 @@ public class Game1 : Game
         TransformMatrix: Apply the matrix in Spritebatch.begin scales and translates virtual canvas back onto the real back buffer in a single pass
          */
 
+        //Redirect all drawing into the offscreen buffer
+        GraphicsDevice.SetRenderTarget(_sceneTarget);
+        
 
         //Step 1 Draw game scene into the virtual camera 
         GraphicsDevice.SetRenderTarget(_virtualTarget);
