@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Reflection.Metadata.Ecma335;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
+using MouseState = Microsoft.Xna.Framework.Input.MouseState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace Delta;
@@ -144,9 +144,9 @@ public class Game1 : Game
             accumulator -= TargetElapsedTime;
         }
 
-            //Game time object contains ElapsedGameTime: Time since the last call. and TotalGameTime: Total runtime since the game started properties 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+        //Game time object contains ElapsedGameTime: Time since the last call. and TotalGameTime: Total runtime since the game started properties 
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        Exit();
 
     
 
