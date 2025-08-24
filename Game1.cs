@@ -5,21 +5,35 @@ using System;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using MouseState = Microsoft.Xna.Framework.Input.MouseState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
+using System.Collections.Generic;
+using MonoGame.Extended.Graphics;
+
 
 namespace Delta;
 //Written By Holden Thompson - SandboxSoftware 
 public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch spriteBatch;
+    private SpriteBatch _spriteBatch;
     private TimeSpan accumulator = TimeSpan.Zero;
     private KeyboardState _previousKeyboard;
     private MouseState _previousMouse;
     private GamePadState _previousGamePad;
+    private Texture2D _playerTexture;
+    private readonly Dictionary<string, Texture2D> _textures = new(); //Dictionary to hold loaded textures
+    private Texture2DAtlas _atlas; //Example of using MonoGame.Extended for texture atlases
+    private const int VirtualWidth = 800; 
+    private const int VirtualHeight = 600;
+    private RenderTarget2D _virtualTarget; 
 
 
     public Game1()
     {
+        /*
+         * Main Game Constructor - set up graphics and game properties here.
+         * Order of execution is Initalize > Load > Update(60hz) > Draw(60hz) > UnloadContent > repeat until end of time
+         */
+
         IsFixedTimeStep = true; //Toggle if you want to maximize framerate at the cost of flucuating update intervals
         TargetElapsedTime = TimeSpan.FromSeconds(1d / 60); // 60 FPS
         _graphics = new GraphicsDeviceManager(this);
@@ -29,8 +43,10 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-        // set up services, managers and any non graphics states here.
+        /*
+         * TODO: Add your initialization logic here
+         * set up services, managers and any non graphics states here.
+        */
         base.Initialize();
 
 
@@ -42,16 +58,39 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        spriteBatch = new SpriteBatch(GraphicsDevice);
-        // load textures fonts audio via this.Content here.
-        // TODO: use this.Content to load your game content here
+        /*
+         load textures fonts audio via this.Content here.
+         TODO: use this.Content to load your game content here
+        */
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        //var texture = Content.Load<Texture2D>("Texture/cards");//Load the texture atlas image
+        //_atlas = Texture2DAtlas.Create("CardsAtlas", texture, 32, 32); //Example of using MonoGame.Extended to create a texture atlas
+
+        //string[] assetNames = { "Texture/player" }; // Add more asset names as needed
+        //foreach (var name in assetNames) _textures[name] = Content.Load<Texture2D>(name);
+
+
+
+        //_playerTexture = Content.Load<Texture2D>("Texture/player"); //Load a player texure to memory
+
+
+        _virtualTarget = new RenderTarget2D (GraphicsDevice,
+            VirtualWidth,
+            VirtualHeight,
+            false,
+            GraphicsDevice.PresentationParameters.BackBufferFormat,
+            DepthFormat.None
+            );
+
     }
 
     protected override void Update(GameTime gameTime)
     {
-        // TODO: Add your update logic here
-        //poll input advance game state handle AI and physics
-
+       /* 
+        TODO: Add your update logic here
+        poll input advance game state handle AI and physics
+       */
 
         var currentKeyboard = Keyboard.GetState();
         var currentMouse = Mouse.GetState();
@@ -123,7 +162,6 @@ public class Game1 : Game
             Vector2 move=currentGamePad.ThumbSticks.Left;
 
 
-
             //Trigger Detection
             float throttle = currentGamePad.Triggers.Right;
 
@@ -148,10 +186,6 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         Exit();
 
-    
-
-
-
 
         float delta = (float)gameTime.ElapsedGameTime.TotalSeconds; //time since last update in seconds
         //float velocity = 10f; //units per second
@@ -164,18 +198,70 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
-        spriteBatch.Begin();
-        //spriteBatch.Draw(playerTexture, position, Color.White); // Need Player Texture Configured
-        spriteBatch.End(); base.Draw(gameTime);
+        /*
+        TODO: Add your drawing code here
+        Issue all draw calls here
+        As project grows need to move the drawing code into a separate class to manage layers and spritebatches
+        */
 
-        // TODO: Add your drawing code here
-        // Issue all draw calls here
+        /* 
+         Summary of the drawing code.
+        Render to _virutalTarget which is size 800x600.
+        Compute Scale Calculate the ratio between the real screen and the virual one on both axis then pick the smaller one this guaranteees the entire canvas fits without cropping
+        Letterbox Handling: Offset the center of the scaled canvas and leave black bars on either sides or top/buttom maintaining aspect ratio
+        TransformMatrix: Apply the matrix in Spritebatch.begin scales and translates virtual canvas back onto the real back buffer in a single pass
+         */
+
+
+        //Step 1 Draw game scene into the virtual camera 
+        GraphicsDevice.SetRenderTarget(_virtualTarget);
+        GraphicsDevice.Clear(Color.CornflowerBlue);
+
+
+        _spriteBatch.Begin(
+            sortMode: SpriteSortMode.Deferred, //Calls until end minimizing state changes
+            blendState: BlendState.AlphaBlend, //Enable transparency
+            samplerState: SamplerState.PointClamp //Gives crisp pixel art scaling
+            );
+        //spriteBatch.Draw(); //all draw calls use the Virtual coords
+        _spriteBatch.End(); 
         base.Draw(gameTime);
+
+        //Step 2 Reset to the back buffer (the actual screen)
+        GraphicsDevice.SetRenderTarget(null);
+        GraphicsDevice.Clear(Color.Black);
+
+        //Step 3 Compute scaling and letterbox offsets
+        float scaleX = (float)GraphicsDevice.Viewport.Width / VirtualWidth;
+        float scaleY = (float)GraphicsDevice.Viewport.Height / VirtualHeight;
+
+        //Step 4 Center the Canvas
+        float offsetX = (GraphicsDevice.Viewport.Width - VirtualWidth * 2f);
+        float offsetY = (GraphicsDevice.Viewport.Height - VirtualHeight * 2f);
+
+        var transform = Matrix.CreateTranslation(-0f, -0f, 0f)
+            * Matrix.CreateScale(scaleX, scaleY, 1f)
+            * Matrix.CreateScale(offsetX, offsetY, 0f);
+
+        //Step 4 Draw the scaled virtual canvas
+        _spriteBatch.Begin(transformMatrix: transform);
+        _spriteBatch.Draw(_virtualTarget, Vector2.Zero, Color.White);
+        _spriteBatch.End();
+
+
+        base.Draw(gameTime);
+
     }
 
     protected override void UnloadContent()
     {
-        //dispose unmanaged resources if needed
+        /*
+        dispose unmanaged resources if needed
+        */
+
+        foreach(var texutre in _textures.Values) texutre.Dispose();
+
+        //_playerTexture.Dispose(); Not needed until player texture set
+        _spriteBatch.Dispose();
     }
 }

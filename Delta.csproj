@@ -12,6 +12,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="MonoGame.Extended" Version="5.0.2" />
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.*" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
   </ItemGroup>
@@ -20,6 +21,6 @@
     <Exec Command="dotnet tool restore" />
   </Target>
   <Target Name="BuildContent" BeforeTargets="Build">   
-  <Exec Command= "mgcb /q"/>  
+  <Exec Command="mgcb /q" />  
   </Target>  
 </Project>
