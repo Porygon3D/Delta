@@ -25,8 +25,8 @@ public class Game1 : Game
     //private Texture2D _playerTexture;
     private readonly Dictionary<string, Texture2D> _textures = new(); //Dictionary to hold loaded textures
     private Texture2DAtlas _atlas; //Example of using MonoGame.Extended for texture atlases
-    private const int VirtualWidth = 800; 
-    private const int VirtualHeight = 600;
+    private const int VirtualWidth = 640; 
+    private const int VirtualHeight = 480;
     private RenderTarget2D _virtualTarget;
     private RenderTarget2D _sceneTarget;
     private Effect _postProcessEffect;
