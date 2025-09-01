@@ -13,3 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Effects/MyShader.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Debug
+/build:Effects/MyShader.fx
+#end

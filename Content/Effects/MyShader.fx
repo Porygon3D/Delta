@@ -44,7 +44,7 @@ technique Basic
 {
     pass P0
     {
-        VertexShader = compile vs_4_1_level_9_1 VS();
-        PixelShader = compile ps_4_1_level_9_1 PS();
+        VertexShader = compile vs_4_1 VS();
+        PixelShader = compile ps_4_1 PS();
     }
 }
