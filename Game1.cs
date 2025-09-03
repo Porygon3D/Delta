@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended;
 
-
+//Cool Stuff
 namespace Delta;
 //Written By Holden Thompson - SandboxSoftware 
 public class Game1 : Game
