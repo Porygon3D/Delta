@@ -43,7 +43,7 @@ Delta is in early development. Core systems are being prototyped and refined. Ex
 Delta is built with modularity, performance, and creativity in mind. It’s a sandbox for experimenting with:
 
 - Custom rendering pipelines
-- ECS-lite architecture
+- EKS-like architecture
 - Procedural content generation
 - Game feel tuning and polish
 
