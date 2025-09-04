@@ -82,8 +82,6 @@ While Delta is currently a solo dev project, feedback and ideas are welcome! Fee
 
 ---
 
----
-
 ## 💬 Contact
 
 Created by [Holden](https://github.com/Porygon3D)  
