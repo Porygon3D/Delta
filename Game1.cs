@@ -8,6 +8,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 using System.Collections.Generic;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended;
+using SharpGLTF.Schema2;
 
 //Cool Stuff
 namespace Delta;
@@ -34,6 +35,8 @@ public class Game1 : Game
     //private Effect _shader;
     private Camera _camera;
     private Model myModel;
+    private ModelRoot _model;
+
 
 
 
@@ -80,6 +83,12 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
+
+        //SharpGLTF Test
+        _model = ModelRoot.Load("Content/Models/TheWorld");
+
+
+
         /*
          load textures fonts audio via this.Content here.
          TODO: use this.Content to load your game content here
