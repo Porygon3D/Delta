@@ -8,7 +8,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 using System.Collections.Generic;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended;
-using SharpGLTF.Schema2;
+//using SharpGLTF.Schema2;
 
 //Cool Stuff
 namespace Delta;
@@ -35,7 +35,7 @@ public class Game1 : Game
     //private Effect _shader;
     private Camera _camera;
     private Model myModel;
-    private ModelRoot _model;
+    //private ModelRoot _model;
 
 
 
@@ -85,7 +85,7 @@ public class Game1 : Game
     {
 
         //SharpGLTF Test
-        _model = ModelRoot.Load("Content/Models/TheWorld");
+        //_model = ModelRoot.Load("Content/Models/TheWorld");
 
 
 
