@@ -1,0 +1,6 @@
+/outputDir:bin/Content
+/intermediateDir:obj/Content
+/rebuild
+#ContentManifest
+#/build:Content/Effects/MyShader.fx
+#/build:Content/Models/Porygon.fbx
