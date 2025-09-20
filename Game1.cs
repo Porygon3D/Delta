@@ -47,3 +47,7 @@ public class Game1 : Game
 
     }
 }
+
+
+
+//THIS IS BASE CAMP. OSCAR GOLF FOXTROT DELTA 8. MESSAGE SEND.
